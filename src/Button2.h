@@ -18,12 +18,12 @@
 #ifndef DEBOUNCE_MS
     #define DEBOUNCE_MS      50
 #endif
-#ifndef LONGCLICK_MS 
+#ifndef LONGCLICK_MS
     #define LONGCLICK_MS    200
 #endif
 #ifndef DOUBLECLICK_MS
     #define DOUBLECLICK_MS  300
-#endif 
+#endif
 #ifndef CAPACITIVE_TOUCH_THRESHOLD
     #define CAPACITIVE_TOUCH_THRESHOLD 35
 #endif
@@ -48,12 +48,15 @@ class Button2 {
     unsigned long down_ms;
     unsigned int debounce_time_ms;
     unsigned int down_time_ms = 0;
+    unsigned short longpress_delay = 0;
     bool pressed_triggered = false;
+    bool longpressed_triggered = false;
     bool longclick_detected = false;
-        
+
     typedef void (*CallbackFunction) (Button2&);
 
     CallbackFunction pressed_cb = NULL;
+    CallbackFunction longpressed_cb = NULL;
     CallbackFunction released_cb = NULL;
     CallbackFunction change_cb = NULL;
     CallbackFunction tap_cb = NULL;
@@ -61,14 +64,15 @@ class Button2 {
     CallbackFunction long_cb = NULL;
     CallbackFunction double_cb = NULL;
     CallbackFunction triple_cb = NULL;
-    
+
   public:
     Button2(byte attachTo, byte buttonMode = INPUT_PULLUP, boolean isCapacitive = false, boolean activeLow = true, unsigned int debounceTimeout = DEBOUNCE_MS);
     void setDebounceTime(unsigned int ms);
     void reset();
-    
+
     void setChangedHandler(CallbackFunction f);
     void setPressedHandler(CallbackFunction f);
+    void setLongPressedHandler(CallbackFunction f, unsigned short delay);
     void setReleasedHandler(CallbackFunction f);
     void setClickHandler(CallbackFunction f);
     void setTapHandler(CallbackFunction f);
@@ -79,10 +83,10 @@ class Button2 {
     unsigned int wasPressedFor() const;
     boolean isPressed() const;
     boolean isPressedRaw() const;
-    
+
     byte getNumberOfClicks() const;
     byte getClickType() const;
-    
+
     bool operator==(Button2 &rhs);
 
     void loop();
